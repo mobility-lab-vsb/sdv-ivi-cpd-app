@@ -22,7 +22,7 @@
   position: relative;
 }
 
-.halsdv .main-status-text {
+.halsdv .system-status-text {
   position: relative;
   width: fit-content;
   margin-top: -1px;
@@ -287,7 +287,7 @@
   flex: 0 0 auto;
 }
 
-.halsdv .text-wrapper-7 {
+.halsdv .time-text {
   position: relative;
   display: flex;
   align-items: center;
@@ -398,6 +398,13 @@
   color: var(--skoda-unselected);
 }
 
+.rear-baby-icon-hal4sdv {
+  align-content: center;
+  position: relative;
+  font-size: 40px;
+  color: var(--skoda-unselected);
+}
+
 .halsdv .passanger-seat {
   display: flex;
   flex-direction: column;
@@ -449,11 +456,32 @@
   position: relative;
 }
 
+.halsdv .rear-left-seat {
+  display: flex;
+  width: 85px;
+  height: 85px;
+  align-items: center;
+  justify-content: center;
+  gap: 19.33px;
+  padding: 19.33px;
+  margin-top: -10px;
+  margin-bottom: -10px;
+  margin-left: -10px;
+  background-color: #224c3569;
+  border-radius: 226.2px;
+  overflow: hidden;
+  border: 10px solid;
+  border-color: #c5e7cf;
+  aspect-ratio: 1;
+  flex-direction: column;
+  position: relative;
+}
+
 .halsdv .middle-seat {
   display: flex;
   flex-direction: column;
-  width: 106px;
-  height: 106px;
+  width: 85px;
+  height: 85px;
   align-items: center;
   justify-content: center;
   gap: 19.33px;
@@ -474,6 +502,27 @@
   flex-direction: column;
   width: 106px;
   height: 106px;
+  align-items: center;
+  justify-content: center;
+  gap: 19.33px;
+  padding: 19.33px;
+  position: relative;
+  margin-top: -10px;
+  margin-bottom: -10px;
+  margin-right: -10px;
+  background-color: #224c3569;
+  border-radius: 226.2px;
+  overflow: hidden;
+  border: 10px solid;
+  border-color: #c5e7cf;
+  aspect-ratio: 1;
+}
+
+.halsdv .rear-right-seat {
+  display: flex;
+  flex-direction: column;
+  width: 85px;
+  height: 85px;
   align-items: center;
   justify-content: center;
   gap: 19.33px;
@@ -651,60 +700,23 @@
   box-shadow: 0 0 10px rgba(0,0,0,0.2);
 }
 
-/* =========================================
-   ŠKODA THEME - BARVY PRO STAVY
-========================================= */
-#skoda-theme .status.state-stable { background-color: #51f09378; }
-#skoda-theme .status.state-stable .status-text, 
-#skoda-theme .status.state-stable .like-icon { color: #51f093; }
+/* Status color changes - Breathing */
+.status-sdv.state-stable { border-color: #4fb17f; }
+.status-sdv.state-stable .status-text-value-bubble { color: #4eb07e; }
 
-#skoda-theme .status.state-elevated { background-color: #EB373778; }
-#skoda-theme .status.state-elevated .status-text, 
-#skoda-theme .status.state-elevated .like-icon { color: #EB3737; }
+.status-sdv.state-elevated { border-color: #EB3737; }
+.status-sdv.state-elevated .status-text-value-bubble { color: #EB3737; }
 
-#skoda-theme .status.state-inactive { background-color: #EBA84B78; }
-#skoda-theme .status.state-inactive .status-text, 
-#skoda-theme .status.state-inactive .like-icon { color: #EBA84B; }
+.status-sdv.state-inactive { border-color: #EBA84B; }
+.status-sdv.state-inactive .status-text-value-bubble { color: #EBA84B; }
 
 
-/* =========================================
-   SDV THEME - BARVY PRO STAVY
-========================================= */
-/* V SDV tématu máš zelenou linku (border) a text, tak je upravíme zde */
-#sdv-theme .status-sdv.state-stable { border-color: #4fb17f; }
-#sdv-theme .status-sdv.state-stable .status-text-value-bubble { color: #4eb07e; }
+/* Status color changes - Temperature */
+.status-sdv.state-comfortable { border-color: #4fb17f; }
+.status-sdv.state-comfortable .status-text-value-bubble { color: #4eb07e; }
 
-#sdv-theme .status-sdv.state-elevated { border-color: #EB3737; }
-#sdv-theme .status-sdv.state-elevated .status-text-value-bubble { color: #EB3737; }
+.status-sdv.state-hot { border-color: #EB3737; }
+.status-sdv.state-hot .status-text-value-bubble { color: #EB3737; }
 
-#sdv-theme .status-sdv.state-inactive { border-color: #EBA84B; }
-#sdv-theme .status-sdv.state-inactive .status-text-value-bubble { color: #EBA84B; }
-
-/* =========================================
-   ŠKODA THEME - STAVY TEPLOTY
-========================================= */
-#skoda-theme .status.state-comfortable { background-color: #51f09378; }
-#skoda-theme .status.state-comfortable .status-text, 
-#skoda-theme .status.state-comfortable .like-icon { color: #51f093; }
-
-#skoda-theme .status.state-hot { background-color: #EB373778; }
-#skoda-theme .status.state-hot .status-text, 
-#skoda-theme .status.state-hot .like-icon { color: #EB3737; }
-
-/* Nová modrá barva pro stav, kdy je moc zima */
-#skoda-theme .status.state-cold { background-color: #37AFEB78; }
-#skoda-theme .status.state-cold .status-text, 
-#skoda-theme .status.state-cold .like-icon { color: #37AFEB; }
-
-
-/* =========================================
-   SDV THEME - STAVY TEPLOTY
-========================================= */
-#sdv-theme .status-sdv.state-comfortable { border-color: #4fb17f; }
-#sdv-theme .status-sdv.state-comfortable .status-text-value-bubble { color: #4eb07e; }
-
-#sdv-theme .status-sdv.state-hot { border-color: #EB3737; }
-#sdv-theme .status-sdv.state-hot .status-text-value-bubble { color: #EB3737; }
-
-#sdv-theme .status-sdv.state-cold { border-color: #37AFEB; }
-#sdv-theme .status-sdv.state-cold .status-text-value-bubble { color: #37AFEB; }
+.status-sdv.state-cold { border-color: #37AFEB; }
+.status-sdv.state-cold .status-text-value-bubble { color: #37AFEB; }

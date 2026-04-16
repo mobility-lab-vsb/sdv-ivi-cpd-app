@@ -44,7 +44,7 @@ const HOST = "0.0.0.0"; //SERVER
 const PORT = 3000;
 
 app.use(bodyParser.json());
-app.use(express.static('.', { index: 'child_ivi.html' }));
+app.use(express.static('.', { index: 'index.html' }));
 
 // ======= STAV PROMĚNNÝCH =======
 let currentState = {

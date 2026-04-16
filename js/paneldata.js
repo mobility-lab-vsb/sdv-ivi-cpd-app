@@ -125,17 +125,24 @@ eventSource.onmessage = (event) => {
 
     // HLAVNÍ STATUS (Nadpis Info obrazovky)
     if (data["Vehicle.Cabin.ChildPresenceDetection.SystemStatus"] !== undefined){
-        const mainStatusEl = document.querySelector('#screen-info .system-status-text');
+        const mainStatusEl = document.querySelector('#sdv-screen-info .system-status-text');
         const statusText = data["Vehicle.Cabin.ChildPresenceDetection.SystemStatus"];
         if (mainStatusEl) mainStatusEl.innerText = statusText;
     }
 
     // SEDADLA
-    updateCPD('cpd-front-left',   (data["Vehicle.Cabin.Seat.Row1.DriverSide.Occupant.Identifier.Issuer"] === "true"));
-    updateCPD('cpd-front-right',  (data["Vehicle.Cabin.Seat.Row1.PassengerSide.Occupant.Identifier.Issuer"] === "true"));
-    updateCPD('cpd-rear-left',    (data["Vehicle.Cabin.Seat.Row2.DriverSide.Occupant.Identifier.Issuer"] === "true"));
-    updateCPD('cpd-rear-middle',  (data["Vehicle.Cabin.Seat.Row2.Middle.Occupant.Identifier.Issuer"] === "true"));
-    updateCPD('cpd-rear-right',   (data["Vehicle.Cabin.Seat.Row2.PassengerSide.Occupant.Identifier.Issuer"] === "true"));
+
+    updateCPD('cpd-front-left',   !!data["Vehicle.Cabin.Seat.Row1.DriverSide.Occupant.Identifier.Issuer"]);
+    updateCPD('cpd-front-right',  !!data["Vehicle.Cabin.Seat.Row1.PassengerSide.Occupant.Identifier.Issuer"]);
+    updateCPD('cpd-rear-left',    !!data["Vehicle.Cabin.Seat.Row2.DriverSide.Occupant.Identifier.Issuer"]);
+    updateCPD('cpd-rear-middle',  !!data["Vehicle.Cabin.Seat.Row2.Middle.Occupant.Identifier.Issuer"]);
+    updateCPD('cpd-rear-right',   !!data["Vehicle.Cabin.Seat.Row2.PassengerSide.Occupant.Identifier.Issuer"]);
+
+    //updateCPD('cpd-front-left',   (data["Vehicle.Cabin.Seat.Row1.DriverSide.Occupant.Identifier.Issuer"] === "true"));
+    //updateCPD('cpd-front-right',  (data["Vehicle.Cabin.Seat.Row1.PassengerSide.Occupant.Identifier.Issuer"] === "true"));
+    //updateCPD('cpd-rear-left',    (data["Vehicle.Cabin.Seat.Row2.DriverSide.Occupant.Identifier.Issuer"] === "true"));
+    //updateCPD('cpd-rear-middle',  (data["Vehicle.Cabin.Seat.Row2.Middle.Occupant.Identifier.Issuer"] === "true"));
+    //updateCPD('cpd-rear-right',   (data["Vehicle.Cabin.Seat.Row2.PassengerSide.Occupant.Identifier.Issuer"] === "true"));
 
     //DECH
     function updateBreathingUI(val, valId, statusId, iconId) {
@@ -168,11 +175,8 @@ eventSource.onmessage = (event) => {
 
     // Hlavní zpracování dat
     if (data["Vehicle.Cabin.ChildPresenceDetection.UWBBreathing"] !== undefined) {
-        const val = parseInt(data["Vehicle.Cabin.ChildPresenceDetection.UWBBreathing"], 10);
-        
-        // 1. Aktualizace pro Škoda theme (má ikonu)
-        updateBreathingUI(val, 'breathing-value', 'breathing-status', 'breathing-icon');
-        
+        const val = parseInt(data["Vehicle.Cabin.ChildPresenceDetection.UWBBreathing"], 10); 
+
         // 2. Aktualizace pro SDV theme (nemá ikonu, posíláme null)
         updateBreathingUI(val, 'breathing-value-sdv', 'breathing-status-sdv', null);
     }
@@ -210,10 +214,6 @@ eventSource.onmessage = (event) => {
         if (data["Vehicle.Cabin.HVAC.AmbientAirTemperature"] !== undefined) {
             const val = parseInt(data["Vehicle.Cabin.HVAC.AmbientAirTemperature"], 10);
 
-            // 1. Aktualizace pro Škoda theme (má ikonu)
-            updateTemperatureUI(val, 'internal-temp-value', 'internal-temp-status', 'internal-temp-icon');
-
-            // 2. Aktualizace pro SDV theme (nemá ikonu, posíláme null)
             updateTemperatureUI(val, 'internal-temp-value-sdv', 'internal-temp-status-sdv', null);
         }
 
