@@ -296,7 +296,7 @@ eventSource.onmessage = (event) => {
     // SYNCHRONIZACE SLIDERU
     if (data["Vehicle.Cabin.ChildPresenceDetection.DelayNotification"] !== undefined) {
         const minutes = Math.floor(data["Vehicle.Cabin.ChildPresenceDetection.DelayNotification"] / 60);
-        const slider = document.getElementById('delay-slider');
+        const slider = document.getElementById('sdv-delay-slider');
         if (slider) {
             slider.value = minutes;
             updateDelayUI();
