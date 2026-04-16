@@ -15,7 +15,7 @@ const mqtt_client = mqtt.connect(BROKER_URL, {
     username: USERNAME,
     password: PASSWORD,
     protocolVersion: 5, // MQTT 5.0
-    rejectUnauthorized: false, // jen pokud je self-signed cert
+    rejectUnauthorized: false, // only if self-signed cert
 });
 
 mqtt_client.on('close', () => console.log('Closed!'));
@@ -24,7 +24,6 @@ mqtt_client.on('error', (err) => console.error('Connection error:', err.message)
 mqtt_client.on('connect', () => {
     console.log('Connected!');
     
-    // Subscribe (pokud chceš přijímat zprávy)
     mqtt_client.subscribe(VSS_TOPIC);
 });
 mqtt_client.on('message', (topic, message) => {
@@ -46,33 +45,8 @@ const PORT = 3000;
 app.use(bodyParser.json());
 app.use(express.static('.', { index: 'index.html' }));
 
-// ======= STAV PROMĚNNÝCH =======
+// Variables for storing current state of all subscribed paths
 let currentState = {
-  "Vehicle.Powertrain.CombustionEngine.IsRunning": false,
-  "Vehicle.Powertrain.Ignition.IsIgnitionOn": false,
-  "Vehicle.Cabin.Door.Row1.DriverSide.IsOpen": false,
-  "Vehicle.Cabin.Door.Row1.PassengerSide.IsOpen": false,
-  "Vehicle.Cabin.Door.Row2.DriverSide.IsOpen": false,
-  "Vehicle.Cabin.Door.Row2.PassengerSide.IsOpen": false,
-  "Vehicle.Cabin.IsAutoPowerOptimize": false,
-  "Vehicle.Cabin.HVAC.IsAirConditioningActive": false,
-  "Vehicle.Cabin.HVAC.IsRecirculationActive": false,
-  "Vehicle.Body.Windshield.Front.IsHeatingOn": false,
-  "Vehicle.Chassis.SteeringWheel.HeatingCooling": 0,
-  "Vehicle.Cabin.Seat.Row1.DriverSide.Switch.IsWarmerEngaged": false,
-  "Vehicle.Cabin.HVAC.Station.Row1.Driver.FanSpeed": 3,
-  "Vehicle.Cabin.HVAC.IsAutoPowerOptimize": false,
-  "Vehicle.Cabin.HVAC.PowerOptimizeLevel": 1,
-  "Vehicle.Cabin.HVAC.Station.Row1.Driver.AirDistribution": "UP",
-  "Vehicle.Cabin.Seat.Row1.DriverSide.Heating": 0,
-  "Vehicle.Cabin.Seat.Row1.PassengerSide.Heating": 0,
-  "Vehicle.Cabin.Seat.Row1.DriverSide.IsOccupied": false,
-  "Vehicle.Cabin.HVAC.Station.Row1.Driver.Temperature": 22,    //.0,
-  "Vehicle.Cabin.HVAC.Station.Row1.Passenger.Temperature": 22,    //.0,
-  "Vehicle.Cabin.HVAC.Station.Row2.Passenger.Temperature": 22,    //.0
-  "Vehicle.Cabin.ChildPresenceDetection.IsChildDetected": false,
-
-  // CPD IVI panel
   "Vehicle.Cabin.Seat.Row1.DriverSide.Occupant.Identifier.Issuer": false,
   "Vehicle.Cabin.Seat.Row1.PassengerSide.Occupant.Identifier.Issuer": false,
   "Vehicle.Cabin.Seat.Row2.DriverSide.Occupant.Identifier.Issuer": false,
@@ -87,7 +61,7 @@ let currentState = {
   "Vehicle.Cabin.ChildPresenceDetection.IsDeveloperOptionActive": false
 };
 
-// Seznam připojených klientů
+// Clients connected to SSE stream
 const clients = new Set();
 
 // ======= ENDPOINT: /events (SSE stream) =======
@@ -98,16 +72,15 @@ app.get('/events', (req, res) => {
   res.flushHeaders();
 
   clients.add(res);
-  console.log('Klient připojen k SSE');
+  console.log('Client connected to SSE stream');
 
-  // Po odpojení
   req.on('close', () => {
     clients.delete(res);
-    console.log('Klient SSE odpojen');
+    console.log('Client SSE disconnected');
   });
 });
 
-// Pomocná funkce pro odeslání změn
+// Function to broadcast state updates to all connected SSE clients
 function broadcastStateUpdate() {
   const data = JSON.stringify(currentState);
   for (const client of clients) {
@@ -117,7 +90,7 @@ function broadcastStateUpdate() {
 
 
 // ============================================================================
-// PUBLISH - Odesílání hodnot do KUKSA Databroker
+// PUBLISH - Send values to KUKSA Databroker
 // ============================================================================
 app.post('/publish', (req, res) => {
   const { path, value } = req.body;
@@ -140,7 +113,7 @@ app.get('/state', (req, res) => {
 });
 
 // ============================================================================
-// SUBSCRIBE - Poslouchání hodnot z KUKSA Databroker
+// SUBSCRIBE - Listen for updates from KUKSA Databroker and update currentState + SSE stream
 // ============================================================================
 const dockerSubscribe = pty.spawn('docker', [
   'run', '-it', '--rm', '--network', `${BROKER}`,
@@ -157,31 +130,6 @@ const dockerSubscribe = pty.spawn('docker', [
 dockerSubscribe.onData((data) => {
   if (data.includes('Successfully connected'))
   {
-    dockerSubscribe.write('subscribe Vehicle.Powertrain.CombustionEngine.IsRunning\n\n');
-    dockerSubscribe.write('subscribe Vehicle.Powertrain.Ignition.IsIgnitionOn\n\n');
-    dockerSubscribe.write('subscribe Vehicle.Cabin.Door.Row1.DriverSide.IsOpen\n\n');
-    dockerSubscribe.write('subscribe Vehicle.Cabin.Door.Row1.PassengerSide.IsOpen\n\n');
-    dockerSubscribe.write('subscribe Vehicle.Cabin.Door.Row2.DriverSide.IsOpen\n\n');
-    dockerSubscribe.write('subscribe Vehicle.Cabin.Door.Row2.PassengerSide.IsOpen\n\n');
-    dockerSubscribe.write('subscribe Vehicle.Cabin.IsAutoPowerOptimize\n\n');
-    dockerSubscribe.write('subscribe Vehicle.Cabin.HVAC.IsAirConditioningActive\n\n');
-    dockerSubscribe.write('subscribe Vehicle.Cabin.HVAC.IsRecirculationActive\n\n');
-    dockerSubscribe.write('subscribe Vehicle.Body.Windshield.Front.IsHeatingOn\n\n');
-    dockerSubscribe.write('subscribe Vehicle.Chassis.SteeringWheel.HeatingCooling\n\n');
-    dockerSubscribe.write('subscribe Vehicle.Cabin.Seat.Row1.DriverSide.Switch.IsWarmerEngaged\n\n');
-    dockerSubscribe.write('subscribe Vehicle.Cabin.HVAC.Station.Row1.Driver.FanSpeed\n\n');
-    dockerSubscribe.write('subscribe Vehicle.Cabin.HVAC.IsAutoPowerOptimize\n\n');
-    dockerSubscribe.write('subscribe Vehicle.Cabin.HVAC.PowerOptimizeLevel\n\n');
-    dockerSubscribe.write('subscribe Vehicle.Cabin.HVAC.Station.Row1.Driver.AirDistribution\n\n');
-    dockerSubscribe.write('subscribe Vehicle.Cabin.Seat.Row1.DriverSide.Heating\n\n');
-    dockerSubscribe.write('subscribe Vehicle.Cabin.Seat.Row1.PassengerSide.Heating\n\n');
-    dockerSubscribe.write('subscribe Vehicle.Cabin.Seat.Row1.DriverSide.IsOccupied\n\n');
-    dockerSubscribe.write('subscribe Vehicle.Cabin.HVAC.Station.Row1.Driver.Temperature\n\n');
-    dockerSubscribe.write('subscribe Vehicle.Cabin.HVAC.Station.Row1.Passenger.Temperature\n\n');
-    dockerSubscribe.write('subscribe Vehicle.Cabin.HVAC.Station.Row2.Passenger.Temperature\n\n');
-    dockerSubscribe.write('subscribe Vehicle.Cabin.ChildPresenceDetection.IsChildDetected\n\n');
-
-    //CPD IVI panel
     dockerSubscribe.write('subscribe Vehicle.Cabin.Seat.Row1.DriverSide.Occupant.Identifier.Issuer\n\n');
     dockerSubscribe.write('subscribe Vehicle.Cabin.Seat.Row1.PassengerSide.Occupant.Identifier.Issuer\n\n');
     dockerSubscribe.write('subscribe Vehicle.Cabin.Seat.Row2.DriverSide.Occupant.Identifier.Issuer\n\n');
@@ -201,17 +149,14 @@ dockerSubscribe.onData((data) => {
   console.log(data);
 
   const text = data.toString();
-  //console.log('Raw output:', text);
   parseAndValidate(text);
 
 });
 
+// Parsing function with validation and change detection
 function parseAndValidate(text) {
   let changed = false;
 
-  // --- POMOCNÉ FUNKCE (Helpers) ---
-
-  // 1. Univerzální parsování Booleanů
   const parseBool = (path) => {
     const match = text.match(new RegExp(`${path}:\\s*['"]?(true|false)['"]?`, 'i'));
     if (match) {
@@ -225,12 +170,11 @@ function parseAndValidate(text) {
     }
   };
 
-  // 2. Univerzální parsování Integerů (s volitelným min/max)
   const parseIntVal = (path, min = -Infinity, max = Infinity) => {
     const match = text.match(new RegExp(`${path}:\\s*([+-]?\\d+)`, 'i'));
     if (match) {
       let val = parseInt(match[1], 10);
-      val = Math.max(min, Math.min(max, val)); // Validace rozsahu
+      val = Math.max(min, Math.min(max, val));
       if (val !== currentState[path]) {
         currentState[path] = val;
         changed = true;
@@ -240,7 +184,6 @@ function parseAndValidate(text) {
     }
   };
 
-  // 3. Univerzální parsování Stringů (pro CPD Status, Air Distribution atd.)
   const parseStr = (path, toUpper = false) => {
     const match = text.match(new RegExp(`${path}:\\s*['"]?(.*?)['"]?(\\s|$)`, 'i'));
     if (match) {
@@ -255,36 +198,10 @@ function parseAndValidate(text) {
     }
   };
 
-  // --- SAMOTNÉ VOLÁNÍ (Mapování VSS -> State) ---
-
-  // Speciální případy s validací (min, max)
-  parseIntVal("Vehicle.Chassis.SteeringWheel.HeatingCooling", 0, 1);
-  parseIntVal("Vehicle.Cabin.HVAC.Station.Row1.Driver.FanSpeed", 0, 5);
-  parseIntVal("Vehicle.Cabin.HVAC.PowerOptimizeLevel", 0, 2);
-  parseIntVal("Vehicle.Cabin.Seat.Row1.DriverSide.Heating", 0, 3);
-  parseIntVal("Vehicle.Cabin.Seat.Row1.PassengerSide.Heating", 0, 3);
-
-  // Stringy
-  parseStr("Vehicle.Cabin.HVAC.Station.Row1.Driver.AirDistribution", true);
+  // Strings
   parseStr("Vehicle.Cabin.ChildPresenceDetection.SystemStatus");
 
-  // Booleany (Auto / HVAC / Doors)
-  parseBool("Vehicle.Powertrain.CombustionEngine.IsRunning");
-  parseBool("Vehicle.Powertrain.Ignition.IsIgnitionOn");
-  parseBool("Vehicle.Cabin.Door.Row1.DriverSide.IsOpen");
-  parseBool("Vehicle.Cabin.Door.Row1.PassengerSide.IsOpen");
-  parseBool("Vehicle.Cabin.Door.Row2.DriverSide.IsOpen");
-  parseBool("Vehicle.Cabin.Door.Row2.PassengerSide.IsOpen");
-  parseBool("Vehicle.Cabin.IsAutoPowerOptimize");
-  parseBool("Vehicle.Cabin.HVAC.IsAirConditioningActive");
-  parseBool("Vehicle.Cabin.HVAC.IsRecirculationActive");
-  parseBool("Vehicle.Body.Windshield.Front.IsHeatingOn");
-  parseBool("Vehicle.Cabin.Seat.Row1.DriverSide.Switch.IsWarmerEngaged");
-  parseBool("Vehicle.Cabin.HVAC.IsAutoPowerOptimize");
-  parseBool("Vehicle.Cabin.Seat.Row1.DriverSide.IsOccupied");
-  parseBool("Vehicle.Cabin.ChildPresenceDetection.IsChildDetected");
-
-  // CPD IVI panel (Booleany)
+  // Booleans
   parseBool("Vehicle.Cabin.Seat.Row1.DriverSide.Occupant.Identifier.Issuer");
   parseBool("Vehicle.Cabin.Seat.Row1.PassengerSide.Occupant.Identifier.Issuer");
   parseBool("Vehicle.Cabin.Seat.Row2.DriverSide.Occupant.Identifier.Issuer");
@@ -293,10 +210,7 @@ function parseAndValidate(text) {
   parseBool("Vehicle.Cabin.ChildPresenceDetection.IsCPDSystemActive");
   parseBool("Vehicle.Cabin.ChildPresenceDetection.IsDeveloperOptionActive");
 
-  // Integery (Teploty a Časy)
-  parseIntVal("Vehicle.Cabin.HVAC.Station.Row1.Driver.Temperature");
-  parseIntVal("Vehicle.Cabin.HVAC.Station.Row1.Passenger.Temperature");
-  parseIntVal("Vehicle.Cabin.HVAC.Station.Row2.Passenger.Temperature");
+  // Integers
   parseIntVal("Vehicle.Cabin.ChildPresenceDetection.UWBBreathing");
   parseIntVal("Vehicle.Cabin.HVAC.AmbientAirTemperature");
   parseIntVal("Vehicle.Cabin.ChildPresenceDetection.NotificationTime");
