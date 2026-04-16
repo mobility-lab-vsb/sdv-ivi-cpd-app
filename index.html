@@ -1,0 +1,171 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta name="viewport" content="width=device-width, initial-scale=1" />
+    <meta charset="utf-8" />
+    <title>Child Presence Detection - HAL4SDV Panel</title>
+
+    <!-- Stylesheets -->
+    <link rel="stylesheet" href="css/globals.css" />
+    <link rel="stylesheet" href="css/style.css" />
+    <link rel="stylesheet" href="css/styleguide.css" />
+    <link rel="stylesheet" href="css/delaycard.css" />
+    <link rel="stylesheet" href="css/settingscard.css" />
+    <link rel="stylesheet" href="css/hal4sdv.css" />
+
+    <!-- Fonts -->
+    <link rel="stylesheet" href="fonts/stylesheet.css" />
+
+    <!-- Icon Fonts --> 
+    <link rel="stylesheet" href="fonts/icons/font/style.css" />
+
+</head>
+<body>
+    <main class="halsdv" role="main" aria-label="Child Safety Monitor Dashboard">
+        <div id="sdv-screen-info" class="sdv-screen active">
+            <section class="status-window" aria-label="Child Status Information">
+                <h1 class="main-status-text">Child Confirmed</h1>
+                <div class="div">
+                    <span class="status-text">Internal temperature:</span>
+                    <span class="status-text-value-hal4sdv"><span id="internal-temp-value-sdv">21</span> °C</span>
+                    <div class="status-sdv" role="status">
+                        <div class="temperature-status">
+                            <span id="internal-temp-status-sdv" class="status-text-value-bubble">Good / Comfortable</span>
+                        </div>
+                    </div>
+                </div>
+                <div class="div">
+                    <span class="status-text">Respiration per minute:</span>
+                    <span class="status-text-value-hal4sdv"><span id="breathing-value-sdv">22</span> BPM</span>
+                    <div class="status-sdv" role="status">
+                        <div class="temperature-status">
+                            <span id="breathing-status-sdv" class="status-text-value-bubble">Stable breathing</span>
+                        </div>
+                    </div>
+                </div>
+            </section>
+        </div>
+
+        <div id="sdv-screen-delay" class="sdv-screen" style="display: none;">
+            <section class="status-window" aria-label="Delay Setup">
+                <h1 class="main-status-text">Delay setup</h1>
+                
+                <div class="div sdv-setting-row">
+                    <span class="status-text">Enable delay</span>
+                    <label class="sdv-switch">
+                        <input type="checkbox" id="sdv-enable-delay-toggle">
+                        <span class="sdv-slider-switch round"></span>
+                    </label>
+                </div>
+
+                <div class="div sdv-setting-row">
+                    <span class="status-text">Notification delay</span>
+                    <span class="status-text-value-hal4sdv">3 minutes</span>
+                </div>
+
+                <div class="div sdv-slider-container">
+                    <button class="sdv-ctrl-btn" id="sdv-delay-minus">−</button>
+                    <input type="range" min="1" max="10" value="3" step="1" class="sdv-range" id="sdv-delay-slider">
+                    <button class="sdv-ctrl-btn" id="sdv-delay-plus">+</button>
+                </div>
+            </section>
+        </div>
+
+        <div id="sdv-screen-settings" class="sdv-screen" style="display: none;">
+            <section class="status-window" aria-label="Settings">
+                <h1 class="main-status-text">Settings</h1>
+                
+                <div class="div sdv-setting-row">
+                    <span class="status-text">Disable child presence</span>
+                    <label class="sdv-switch">
+                        <input type="checkbox" id="sdv-disable-child-toggle">
+                        <span class="sdv-slider-switch round"></span>
+                    </label>
+                </div>
+
+                <div class="div sdv-setting-row">
+                    <span class="status-text">Enable developer mode</span>
+                    <label class="sdv-switch">
+                        <input type="checkbox" id="sdv-dev-mode-toggle">
+                        <span class="sdv-slider-switch round"></span>
+                    </label>
+                </div>
+
+                <div class="div sdv-setting-row">
+                    <span class="status-text">HAL4SDV Theme</span>
+                    <label class="sdv-switch">
+                        <input type="checkbox" id="sdv-theme-toggle" checked>
+                        <span class="sdv-slider-switch round"></span>
+                    </label>
+                </div>
+            </section>
+        </div>
+
+
+        <footer class="bottom-section" aria-label="Navigation and Timer">
+            <nav class="left-menu" aria-label="Main Menu">
+                <button class="menu-button-info active" aria-label="Info" data-screen="sdv-screen-info">
+                    <span class="left-line"></span>
+                    <span class="info-text">
+                        <span class="menu-button-text"> <i class="icon left-menu-icon">&#xf004;</i>Info</span>
+                    </span>
+                </button>
+                <button class="menu-button-info" aria-label="Delay" data-screen="sdv-screen-delay">
+                    <span class="left-line"></span>
+                    <span class="info-text">
+                        <span class="menu-button-text"> <i class="icon left-menu-icon delay-icon-sdv">&#xf001;</i>Delay</span>
+                    </span>
+                </button>
+                <button class="menu-button-info" aria-label="Settings" data-screen="sdv-screen-settings">
+                    <span class="left-line"></span>
+                    <span class="info-text">
+                        <span class="menu-button-text"> <i class="icon left-menu-icon">&#xf005;</i>Settings</span>
+                    </span>
+                </button>
+            </nav>
+
+            <div class="time-with-status" aria-label="Emergency Call Timer">
+                <div class="time">
+                    <span class="text-wrapper-7" aria-label="4 minutes and 20 seconds">4:20</span>
+                </div>
+                <div class="time-text">
+                    <p class="p">Time until first e-call initiation</p>
+                </div>
+                <div class="progress-slider" role="progressbar" aria-valuenow="82" aria-valuemin="0" aria-valuemax="100" aria-label="Time progress">
+                    <div class="remaining-progress"></div>
+                </div>
+            </div>
+            </footer>
+
+        <!-- Seat Map with Baby Icons -->
+        <section class="seats" aria-label="Vehicle Seat Occupancy Map">
+            <!-- Front Seats -->
+            <div class="front-seats">
+                <div class="driver-seat" aria-label="Driver seat - child detected">
+                    <i class="icon baby-icon-hal4sdv">&#xe900;</i>
+                </div>
+                <div class="passanger-seat" aria-label="Passenger seat - child detected">
+                    <i class="icon baby-icon-hal4sdv">&#xe900;</i>
+                </div>
+            </div>
+            <!-- Rear Seats -->
+            <div class="rear-seats">
+                <div class="left-seat" aria-label="Rear left seat - child detected">
+                    <i class="icon baby-icon-hal4sdv">&#xe900;</i>
+                </div>
+                <div class="middle-seat" aria-label="Rear middle seat - child detected">
+                    <i class="icon baby-icon-hal4sdv">&#xe900;</i>
+                </div>
+                <div class="right-seat" aria-label="Rear right seat - child detected">
+                    <i class="icon baby-icon-hal4sdv">&#xe900;</i>
+                </div>
+            </div>
+        </section>
+        <!-- Brand Logo -->
+        <img class="logo" src="img/HAL4SDV_logo_black_transp.avif" alt="HAL4SDV - Systems Safety Security Software" />
+    </main>
+
+    <script src="js/paneldata.js"></script>
+    <script src="js/hal4sdv.js"></script>
+</body>
+</html>

@@ -1,0 +1,85 @@
+/* --- SETTINGS OBRAZOVKA LAYOUT --- */
+.settings-content {
+  gap: 30px; /* Větší mezera mezi headerem a seznamem */
+  width: auto;
+  flex-grow: 1; /* Expand do prostoru */
+  justify-content: flex-start; /* Zarovnat k hornímu okraji */
+}
+
+.settings-list {
+  display: flex;
+  flex-direction: column;
+  gap: 10px; /* Prostor mezi jednotlivými settingy */
+  flex-grow: 1;
+  width: 100%;
+}
+
+/* Úprava karet pro settingy */
+.setting-item {
+  width: 100%; /* Plná šířka */
+  flex-direction: row; /* Text a toggle vedle sebe */
+  justify-content: space-between; /* Popisek vlevo, toggle vpravo */
+  align-items: center; /* Vertikální centrování */
+  padding: 0 40px; /* Padding pro kartu */
+}
+
+.setting-desc {
+  font-size: 32px; /* Větší popisek podle designu */
+  color: var(--skoda-unselected); /* Použít proměnnou pro opacity */
+  font-family: "Skoda next", Helvetica;
+  font-weight: 500;
+  letter-spacing: -2%;
+}
+
+/* --- TOGGLE PŘEPÍNAČ - ČISTÉ CSS --- */
+.toggle-container {
+  display: inline-flex;
+  align-items: center;
+}
+
+.toggle-input {
+  display: none; /* Skryje standardní checkbox */
+}
+
+.toggle-label {
+  display: inline-block;
+  cursor: pointer;
+  width: 72px; /* Z designu image_4.png */
+  height: 36px; /* Z designu image_4.png */
+  background-color: white; /* Unselected barva tracku */
+  border-radius: 18px; /* Kulaté konce */
+  position: relative;
+  transition: background-color 0.2s ease;
+}
+
+/* Kolečko (Knob) */
+.toggle-label::after {
+  content: "";
+  display: block;
+  width: 32px; /* O něco menší než výška tracku */
+  height: 32px;
+  background-color: #0c1b26; /* Tmavá barva kolečka z designu */
+  border-radius: 50%; /* Kulaté kolečko */
+  position: absolute;
+  top: 2px; /* Vertikální centrování */
+  left: 2px; /* Počáteční pozice (OFF) */
+  transition: left 0.2s ease;
+}
+
+/* STAV: ON (ZELENÁ) - VSS Cesta */
+.toggle-input:checked + .toggle-label {
+  background-color: var(--skoda-selected); /* Zelený track */
+}
+
+/* STAV: ON Knob Pozice */
+.toggle-input:checked + .toggle-label::after {
+  left: 38px; /* Posun kolečka doprava (72-32-2 = 38) */
+}
+
+.delay-desc {
+  font-size: 32px; /* Větší popisek podle designu */
+  color: var(--skoda-unselected); /* Použít proměnnou pro opacity */
+  font-family: "Skoda next", Helvetica;
+  font-weight: 500;
+  letter-spacing: -2%;
+}

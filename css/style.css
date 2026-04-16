@@ -1,0 +1,468 @@
+.CPD-IVI-panel {
+  display: flex;
+  width: 1912px;  /* Fixní šířka */
+  height: 746px;  /* Fixní výška */
+  align-items: center;
+  position: relative;
+  background-image: url("/img/CPD-IVI-panel.png");
+  background-size: cover;
+  background-position: 50% 50%;
+  border-radius: 22px;
+  overflow: hidden;
+  flex-shrink: 0; /* Zabrání smrštění, pokud je okno malé */
+}
+
+.left-side-info {
+  display: inline-flex;
+  flex-direction: column;
+  align-items: flex-start;
+  gap: 8px;
+  padding: 12px 9px;
+  position: relative;
+  flex: 0 0 auto;
+}
+
+.settings-icon {
+  font-family: "Icons", sans-serif;
+  font-size: 30px;
+}
+
+.delay-icon {
+  font-family: "Icons", sans-serif;
+  font-size: 42px;
+}
+
+.info-icon {
+  font-family: "Icons", sans-serif;
+  font-size: 30px;
+}
+
+.system-status {
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  gap: 10px;
+  padding-bottom: 28px;
+  position: relative;
+  flex: 0 0 auto;
+}
+
+.back-button {
+  display: flex;
+  justify-content: center;
+  align-items: center; 
+  position: relative;
+  font-size: 74px;
+  line-height: 1;
+  width: 74px;
+  height: 74px;
+  background-color: #ffffff1a;
+  border-radius: 50%;
+  overflow: hidden;
+  border: none;
+  cursor: pointer;
+  color: white;
+}
+
+.vector {
+  position: relative;
+  width: 41.48px;
+  height: 22.84px;
+}
+
+.system-status-text {
+  position: relative;
+  display: flex;
+  align-items: center;
+  width: fit-content;
+  font-family: "SKODA Next", Helvetica;
+  font-weight: bold;
+  color: var(--skoda-unselected);
+  font-size: 44px;
+  letter-spacing: -2%;
+  line-height: normal;
+  white-space: nowrap;
+}
+
+.time {
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  position: relative;
+  flex: 0 0 auto;
+  padding-left: 255px;
+}
+
+.time-text {
+  position: relative;
+  display: flex;
+  align-items: center;
+  width: fit-content;
+  margin-top: -0.68px;
+  font-family: "Skoda Next", Helvetica;
+  font-weight: bold;
+  color: var(--skoda-unselected);
+  font-size: 90px;
+  line-height: normal;
+  white-space: nowrap;
+}
+
+.progress-slider {
+  position: relative;
+  width: 707px;
+  height: 64px;
+  background-color: #ffffff1c;
+  border-radius: 7.53px;
+  overflow: hidden;
+}
+
+.remaining-progress {
+  position: absolute; /* Změněno z relative na absolute pro lepší zarovnání */
+  left: 0;
+  top: 0;
+  height: 100%;
+  background-color: var(--skoda-selected);
+  border-radius: 7.53px;
+  /* Plynulý přechod šířky (1s odpovídá většinou intervalu aktualizace dat) */
+  transition: width 1s linear; 
+}
+
+.action {
+  position: relative;
+  display: flex;
+  align-items: center;
+  width: fit-content;
+  margin-top: -0.68px;
+  font-family: "Skoda Next", Helvetica;
+  font-weight: normal;
+  color: var(--skoda-unselected);
+  font-size: 32px;
+  letter-spacing: -2%;
+  line-height: normal;
+  white-space: nowrap;
+}
+
+.temperature {
+  display: flex;
+  flex-direction: column;
+  max-width: 714.34px;
+  width: 572px;
+  align-items: flex-start;
+  gap: 6.63px;
+  position: relative;
+  flex: 0 0 auto;
+  padding-top: 50px;
+  font-family: "Skoda Next", Helvetica;
+  font-weight: normal;
+  letter-spacing: -2%;
+  font-size: 32px;
+}
+
+.temperature-text {
+  position: relative;
+  width: fit-content;
+  color: var(--skoda-unselected);
+  text-align: center;
+  line-height: normal;
+  white-space: nowrap;
+}
+
+.value-div {
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  gap: 41.08px;
+  position: relative;
+  flex: 0 0 auto;
+  margin-right: -116.84px;
+}
+
+.status-value {
+  position: relative;
+  width: fit-content;
+  font-family: "Skoda Next", Helvetica;
+  font-weight: Bold;
+  color: var(--skoda-unselected);
+  font-size: 63.6px;
+  text-align: center;
+  letter-spacing: -2%;
+  line-height: normal;
+  white-space: nowrap;
+}
+
+.span {
+  letter-spacing: -1.21px;
+}
+
+.value-text {
+  font-size: 42.4px;
+  letter-spacing: -0.54px;
+}
+
+.status {
+  display: flex;
+  padding: 15px;
+  height: 58.31px;
+  align-items: center;
+  justify-content: center;
+  position: relative;
+  background-color: #51f09378;
+  border-radius: 89.46px;
+  overflow: hidden;
+}
+
+.like-icon {
+  position: relative;
+  align-content: center;
+  font-family: "Icons", sans-serif;
+  font-size: 36px;
+  color: var(--skoda-selected);
+}
+
+.status-text {
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  gap: 6.63px;
+  padding: 6.63px;
+  position: relative;
+  flex: 0 0 auto;
+  margin-top: -3.10px;
+  margin-bottom: -3.10px;
+}
+
+.status-text {
+  position: relative;
+  width: fit-content;
+  margin-top: -0.66px;
+  font-family: "Skoda Next", Helvetica;
+  font-weight: Regular;
+  color: var(--skoda-selected);
+  font-size: 32px;
+  text-align: center;
+  letter-spacing: -2%;
+  line-height: normal;
+  white-space: nowrap;
+}
+
+.car-seats {
+  display: flex;
+  flex-direction: column;
+  width: 879px;
+  height: 724.65px;
+  align-items: center;
+  justify-content: center;
+  gap: 170px;
+  padding: 20px 0px 0px;
+  position: relative;
+  aspect-ratio: 1.21;
+  background-image: url(/img/EnyaqTop_transparent.png);
+  background-size: cover;
+  background-position: 50% 50%;
+}
+
+.front-seats {
+  display: inline-flex;
+  align-items: flex-start;
+  gap: 130px;
+  padding: 10px;
+  position: relative;
+  flex: 0 0 auto;
+}
+
+.baby-icon-wrapper {
+  display: flex;
+  flex-direction: column;
+  width: 136px;
+  height: 136px;
+  align-items: flex-start;
+  gap: 19.33px;
+  padding: 19.33px;
+  position: relative;
+  margin-top: -10.00px;
+  margin-bottom: -10.00px;
+  margin-left: -10.00px;
+  background-color: #51f09369;
+  border-radius: 226.2px;
+  overflow: hidden;
+  border: 10px solid;
+  border-color: var(--skoda-selected);
+  aspect-ratio: 1;
+}
+
+.baby-icon {
+  align-content: center;
+  position: relative;
+  font-size: 78.38px;
+  color: var(--skoda-unselected);
+}
+
+.baby-icon-wrapper-2 {
+  display: flex;
+  flex-direction: column;
+  width: 136px;
+  height: 136px;
+  align-items: flex-start;
+  gap: 19.33px;
+  padding: 19.33px;
+  position: relative;
+  margin-top: -10.00px;
+  margin-bottom: -10.00px;
+  margin-right: -10.00px;
+  background-color: #51f09369;
+  border-radius: 226.2px;
+  overflow: hidden;
+  border: 10px solid;
+  border-color: var(--skoda-selected);
+  aspect-ratio: 1;
+}
+
+.rear-seats {
+  display: inline-flex;
+  align-items: flex-start;
+  gap: 5px;
+  padding: 10px;
+  position: relative;
+  flex: 0 0 auto;
+}
+
+.middle-seat {
+  display: flex;
+  flex-direction: column;
+  width: 136px;
+  height: 136px;
+  align-items: flex-start;
+  gap: 19.33px;
+  padding: 19.33px;
+  position: relative;
+  margin-top: -10.00px;
+  margin-bottom: -10.00px;
+  background-color: #51f09369;
+  border-radius: 226.2px;
+  overflow: hidden;
+  border: 10px solid;
+  border-color: var(--skoda-selected);
+  aspect-ratio: 1;
+}
+
+.menu {
+  display: inline-flex;
+  flex-direction: column;
+  width: 252px;
+  position: absolute;
+  z-index: 10; /* Aby bylo nad obsahem */
+  height: 746px;
+  align-items: flex-start;
+  justify-content: space-between;
+  padding: 10px 0px;
+  position: absolute;
+  top: 0;
+  left: 0;
+  background-color: rgba(255, 255, 255, 0.04);
+}
+
+.menu-buttons {
+  display: inline-flex;
+  flex-direction: column;
+  align-items: flex-start;
+  gap: 10px;
+  position: relative;
+  flex: 0 0 auto;
+}
+
+.left-line {
+  position: absolute;
+  height: 100%;
+  top: 0;
+  left: 0;
+  width: 6px;
+  background-color: var(--skoda-selected);
+}
+
+.label {
+  position: relative;
+  display: flex;
+  justify-content: left;
+  align-items: center;
+  font-family: "Skoda Next", Helvetica;
+  font-weight: Normal;
+  color: var(--skoda-unselected);
+  font-size: 28px;
+  letter-spacing: -2%;
+  gap: 20px;
+  padding-left: 30px;
+}
+
+.back-button:hover {
+  background-color: #ffffff2a;
+}
+
+.back-button:active {
+  background-color: #ffffff3a;
+}
+
+.convoy-distance-menu {
+  position: relative;
+  width: 252px;
+  height: 149px;
+  background-color: transparent;
+  border: none;
+  padding: 0;
+  cursor: pointer;
+  text-align: left;
+}
+
+.convoy-distance-menu:hover {
+  background-color: #ffffff08;
+}
+
+.convoy-distance-menu:active {
+  background-color: #ffffff12;
+}
+
+/* --- LOGIKA PŘEPÍNÁNÍ OBRAZOVEK --- */
+.screen {
+  display: none;
+  width: calc(1912px - 252px); /* Šířka panelu MÍNUS šířka menu */
+  height: 100%;
+  margin-left: 252px; /* Odsazení o šířku menu */
+  padding-left: 52px;
+  padding-right: 48px;
+  justify-content: space-between; /* Roztáhne text vlevo a auto vpravo */
+  box-sizing: border-box; /* Zajistí, že padding neroztáhne ten calc() */
+}
+
+.screen.active-screen {
+    display: flex; /* Zobrazí jen aktivní */
+}
+
+/* --- AKTIVNÍ STAVY V MENU --- */
+
+/* Skrytí linky u neaktivních tlačítek */
+.menu .left-line {
+    visibility: hidden;
+}
+
+/* Zobrazení linky u aktivního */
+.active-btn .left-line {
+    visibility: visible;
+}
+
+/* Barva ikony a textu pro aktivní tlačítko */
+.active-btn .label {
+    color: var(--skoda-selected);
+}
+
+.active-btn i {
+    color: var(--skoda-selected);
+}
+
+.active-btn {
+    background-color: rgba(255, 255, 255, 0.03);
+}
+
+/* Zrušíme vertikální centrování pro Delay a Settings a přilepíme je nahoru */
+#screen-delay, 
+#screen-settings {
+    align-items: flex-start; /* Vystřelí obsah k hornímu okraji */
+}
