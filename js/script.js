@@ -281,36 +281,36 @@ eventSource.onmessage = (event) => {
                 statusTextEl.innerText = "Notifying driver";*/
                 switch (data["Vehicle.Cabin.ChildPresenceDetection.SystemStatus"])
                 {
-                    case "INACTIVE":
-                        statusTextEl.innerText = "Time until SCAN";
+                    case "Inactive":
+                        statusTextEl.innerText = "Time until scan";
                         break;
-                    case "SCAN":
+                    case "Scan":
                         if (data["Vehicle.Cabin.ChildPresenceDetection.FusionErrorTime"] > 0)
                         {
-                            statusTextEl.innerText = "Time until ERROR";
+                            statusTextEl.innerText = "Time until error";
                         }
                         else
                         {
-                            statusTextEl.innerText = "Time until STANDBY";
+                            statusTextEl.innerText = "Time until standby";
                         }
                         break;
-                    case "DRIVER_NOTIFICATION":
-                        statusTextEl.innerText = "Time until EXTERNAL_ALERT";
+                    case "Driver Notification":
+                        statusTextEl.innerText = "Time until external alert";
                         break;
-                    case "EXTERNAL_ALERT":
-                        statusTextEl.innerText = "Time until INTERVENTION";
+                    case "External Alert":
+                        statusTextEl.innerText = "Time until intervention";
                         break;
-                    case "INTERVENTION":
-                        statusTextEl.innerText = "Time until CARERS_NOTIFICATION";
+                    case "Intervention":
+                        statusTextEl.innerText = "Time until carers notification";
                         break;
-                    case "CARERS_NOTIFICATION":
+                    case "Carers Notification":
                         statusTextEl.innerText = "Time until first e-call initiation";
                         break;
-                    case "DELAYED":
-                        statusTextEl.innerText = "Time until DRIVER_NOTIFICATION";
+                    case "Delayed":
+                        statusTextEl.innerText = "Time until driver notification";
                         break;
-                    case "PAUSED":
-                    case "ERROR":
+                    case "Paused":
+                    case "Error":
                         timeEl.style.opacity = "0";
                         break;
                 }

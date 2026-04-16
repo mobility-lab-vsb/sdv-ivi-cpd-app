@@ -155,68 +155,73 @@ dockerSubscribe.onData((data) => {
 
 // Parsing function with validation and change detection
 function parseAndValidate(text) {
-  let changed = false;
+    let changed = false;
 
-  const parseBool = (path) => {
-    const match = text.match(new RegExp(`${path}:\\s*['"]?(true|false)['"]?`, 'i'));
-    if (match) {
-      const val = match[1].toLowerCase() === 'true';
-      if (val !== currentState[path]) {
-        currentState[path] = val;
-        changed = true;
-        console.log(`${path} (BOOL): ${val}`);
-        mqtt_client.publish(VSS_TOPIC, JSON.stringify({ path, value: val, timestamp: Date.now() / 1000 }));
-      }
-    }
-  };
+    const cleanText = text.replace(/\x1B(?:[@-Z\\-_]|\[[0-?]*[ -/]*[@-~])/g, '');
 
-  const parseIntVal = (path, min = -Infinity, max = Infinity) => {
-    const match = text.match(new RegExp(`${path}:\\s*([+-]?\\d+)`, 'i'));
-    if (match) {
-      let val = parseInt(match[1], 10);
-      val = Math.max(min, Math.min(max, val));
-      if (val !== currentState[path]) {
-        currentState[path] = val;
-        changed = true;
-        console.log(`${path} (INT): ${val}`);
-        mqtt_client.publish(VSS_TOPIC, JSON.stringify({ path, value: val }));
-      }
-    }
-  };
+    const parseBool = (path) => {
+        const match = cleanText.match(new RegExp(`${path}:\\s*['"]?(true|false)['"]?`, 'i'));
+        if (match) {
+            const val = match[1].toLowerCase() === 'true';
+            if (val !== currentState[path]) {
+                currentState[path] = val;
+                changed = true;
+                console.log(`${path} (BOOL): ${val}`);
+                mqtt_client.publish(VSS_TOPIC, JSON.stringify({ path, value: val, timestamp: Date.now() / 1000 }));
+            }
+        }
+    };
 
-  const parseStr = (path, toUpper = false) => {
-    const match = text.match(new RegExp(`${path}:\\s*['"]?(.*?)['"]?(\\s|$)`, 'i'));
-    if (match) {
-      let val = match[1];
-      if (toUpper) val = val.toUpperCase();
-      if (val !== currentState[path]) {
-        currentState[path] = val;
-        changed = true;
-        console.log(`${path} (STR): ${val}`);
-        mqtt_client.publish(VSS_TOPIC, JSON.stringify({ path, value: val }));
-      }
-    }
-  };
+    const parseIntVal = (path, min = -Infinity, max = Infinity) => {
+        const match = cleanText.match(new RegExp(`${path}:\\s*([+-]?\\d+)`, 'i'));
+        if (match) {
+            let val = parseInt(match[1], 10);
+            val = Math.max(min, Math.min(max, val));
+            if (val !== currentState[path]) {
+                currentState[path] = val;
+                changed = true;
+                console.log(`${path} (INT): ${val}`);
+                mqtt_client.publish(VSS_TOPIC, JSON.stringify({ path, value: val }));
+            }
+        }
+    };
 
-  // Strings
-  parseStr("Vehicle.Cabin.ChildPresenceDetection.SystemStatus");
+    const parseStr = (path, toUpper = false) => {
+        const match = cleanText.match(new RegExp(`${path}:\\s*([^\\r\\n]+)`, 'i'));
+        
+        if (match) {
+            let val = match[1].trim().replace(/^['"]|['"]$/g, '').trim();
+            
+            if (toUpper) val = val.toUpperCase();
+            
+            if (val !== currentState[path]) {
+                currentState[path] = val;
+                changed = true;
+                console.log(`${path} (STR): ${val}`);
+                mqtt_client.publish(VSS_TOPIC, JSON.stringify({ path, value: val }));
+            }
+        }
+    };
 
-  // Booleans
-  parseBool("Vehicle.Cabin.Seat.Row1.DriverSide.Occupant.Identifier.Issuer");
-  parseBool("Vehicle.Cabin.Seat.Row1.PassengerSide.Occupant.Identifier.Issuer");
-  parseBool("Vehicle.Cabin.Seat.Row2.DriverSide.Occupant.Identifier.Issuer");
-  parseBool("Vehicle.Cabin.Seat.Row2.Middle.Occupant.Identifier.Issuer");
-  parseBool("Vehicle.Cabin.Seat.Row2.PassengerSide.Occupant.Identifier.Issuer");
-  parseBool("Vehicle.Cabin.ChildPresenceDetection.IsCPDSystemActive");
-  parseBool("Vehicle.Cabin.ChildPresenceDetection.IsDeveloperOptionActive");
+    // Strings
+    parseStr("Vehicle.Cabin.ChildPresenceDetection.SystemStatus");
 
-  // Integers
-  parseIntVal("Vehicle.Cabin.ChildPresenceDetection.UWBBreathing");
-  parseIntVal("Vehicle.Cabin.HVAC.AmbientAirTemperature");
-  parseIntVal("Vehicle.Cabin.ChildPresenceDetection.NotificationTime");
-  parseIntVal("Vehicle.Cabin.ChildPresenceDetection.DelayNotification");
+    // Booleans
+    parseBool("Vehicle.Cabin.Seat.Row1.DriverSide.Occupant.Identifier.Issuer");
+    parseBool("Vehicle.Cabin.Seat.Row1.PassengerSide.Occupant.Identifier.Issuer");
+    parseBool("Vehicle.Cabin.Seat.Row2.DriverSide.Occupant.Identifier.Issuer");
+    parseBool("Vehicle.Cabin.Seat.Row2.Middle.Occupant.Identifier.Issuer");
+    parseBool("Vehicle.Cabin.Seat.Row2.PassengerSide.Occupant.Identifier.Issuer");
+    parseBool("Vehicle.Cabin.ChildPresenceDetection.IsCPDSystemActive");
+    parseBool("Vehicle.Cabin.ChildPresenceDetection.IsDeveloperOptionActive");
 
-  if (changed) broadcastStateUpdate();
+    // Integers
+    parseIntVal("Vehicle.Cabin.ChildPresenceDetection.UWBBreathing");
+    parseIntVal("Vehicle.Cabin.HVAC.AmbientAirTemperature");
+    parseIntVal("Vehicle.Cabin.ChildPresenceDetection.NotificationTime");
+    parseIntVal("Vehicle.Cabin.ChildPresenceDetection.DelayNotification");
+
+    if (changed) broadcastStateUpdate();
 }
 
 // ============================================================================
