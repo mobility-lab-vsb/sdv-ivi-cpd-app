@@ -1,8 +1,6 @@
 const eventSource = new EventSource('/events');
 
-// --- 1. GLOBÁLNÍ POMOCNÉ FUNKCE ---
-
-// Funkce pro odesílání dat do KUKSA
+// Function to publish values to KUKSA via POST request
 async function publishValue(path, value) {
     console.log(`Publishing to KUKSA: ${path} = ${value}`);
     try {
@@ -16,7 +14,7 @@ async function publishValue(path, value) {
     }
 }
 
-// Nastavení opacity pro ikony miminek
+// Function to update child presence detection icons based on seat status
 function updateCPD(elementId, isDetected) {
     const el = document.getElementById(elementId);
     if (el) {
@@ -25,88 +23,132 @@ function updateCPD(elementId, isDetected) {
     }
 }
 
-// Funkce pro aktualizaci UI slideru (vytažena ven, aby na ni viděl i SSE stream)
-function updateDelayUI() {
-    const delaySlider = document.getElementById('delay-slider');
-    const delayMinutesText = document.getElementById('delay-minutes-text');
-    
-    if (!delaySlider) return;
-    
-    const val = delaySlider.value;
-    const percent = ((val - delaySlider.min) / (delaySlider.max - delaySlider.min)) * 100;
-    
-    // Zelená linka v tracku
-    delaySlider.style.background = `linear-gradient(to right, #51f093 ${percent}%, rgba(255, 255, 255, 0.1) ${percent}%)`;
-    
-    // Text "X minutes"
-    if (delayMinutesText) {
-        delayMinutesText.innerText = `${val} ${val == 1 ? 'minute' : 'minutes'}`;
-    }
-}
+// Delay notification controls logic
+function initDelayControls() {
+    const toggleEnable = document.getElementById("sdv-enable-delay-toggle");
+    const delaySlider = document.getElementById("sdv-delay-slider");
+    const delayBottomControls = document.getElementById("delay-bottom-controls");
+    const delayTextWrapper = document.getElementById("delay-text-wrapper");
+    const timeDisplay = document.getElementById("delay-time-display");
+    const btnMinus = document.getElementById("sdv-delay-minus");
+    const btnPlus = document.getElementById("sdv-delay-plus");
 
-// --- 2. INICIALIZACE PŘI NAČTENÍ STRÁNKY ---
+    if (delayBottomControls) delayBottomControls.style.display = "none";
 
-document.addEventListener('DOMContentLoaded', () => {
-    
-    // PŘEPÍNÁNÍ OBRAZOVEK
-    const menuButtons = document.querySelectorAll('.menu button[data-screen]');
-    const screens = document.querySelectorAll('.screen');
+    const updateDelayUI = () => {
+        const val = parseInt(delaySlider.value, 10);
+        const min = parseInt(delaySlider.min || 0, 10);
+        const max = parseInt(delaySlider.max || 10, 10);
+        const percent = ((val - min) / (max - min)) * 100;
+        
+        delaySlider.style.background = `linear-gradient(to right, #45aa73 ${percent}%, rgba(255, 255, 255, 0.15) ${percent}%)`;
+        timeDisplay.innerText = `${val} ${val === 1 ? 'minute' : 'minutes'}`;
+    };
 
-    menuButtons.forEach(btn => {
-        btn.addEventListener('click', () => {
-            const targetScreenId = btn.getAttribute('data-screen');
-            menuButtons.forEach(b => b.classList.remove('active-btn'));
-            screens.forEach(s => s.classList.remove('active-screen'));
-            btn.classList.add('active-btn');
-            document.getElementById(targetScreenId)?.classList.add('active-screen');
-        });
-    });
-
-    // --- LOGIKA DELAY KARET ---
-    const delayToggle = document.getElementById('enable-delay-toggle');
-    const delaySlider = document.getElementById('delay-slider');
-    const delayCard = document.querySelector('#screen-delay .delay-card:last-child');
-    const btnMinus = document.getElementById('delay-minus');
-    const btnPlus = document.getElementById('delay-plus');
-
-    // Eventy pro Slider (jen vizuální)
-    delaySlider?.addEventListener('input', updateDelayUI);
-
-    btnMinus?.addEventListener('click', () => { 
-        if (delayToggle && !delayToggle.checked) { 
-            delaySlider.value--; 
-            updateDelayUI(); 
+    const changeDelay = (delta) => {
+        if (toggleEnable && toggleEnable.checked) return;
+        
+        const currentVal = parseInt(delaySlider.value, 10);
+        const min = parseInt(delaySlider.min || 0, 10);
+        const max = parseInt(delaySlider.max || 10, 10);
+        
+        const newVal = Math.max(min, Math.min(max, currentVal + delta));
+        
+        if (newVal !== currentVal) {
+            delaySlider.value = newVal;
+            updateDelayUI();
         }
-    });
-    btnPlus?.addEventListener('click', () => { 
-        if (delayToggle && !delayToggle.checked) {
-            delaySlider.value++; 
-            updateDelayUI(); 
-        }
-    });
+    };
 
-    // Toggle potrvrzení Delay
-    if (delayToggle) {
-        delayToggle.addEventListener('change', (e) => {
+    delaySlider.addEventListener('input', updateDelayUI);
+    if (btnMinus) btnMinus.addEventListener('click', () => changeDelay(-1));
+    if (btnPlus) btnPlus.addEventListener('click', () => changeDelay(1));
+
+    if (toggleEnable) {
+        toggleEnable.addEventListener('change', (e) => {
             const isConfirmed = e.target.checked;
-            if (isConfirmed && delaySlider) {
+            
+            [delayTextWrapper, delayBottomControls].forEach(el => {
+                if (el) el.classList.toggle("section-locked", isConfirmed);
+            });
+            
+            [delaySlider, btnMinus, btnPlus].forEach(el => {
+                if (el) el.disabled = isConfirmed;
+            });
+
+            if (isConfirmed) {
                 const secondsValue = parseInt(delaySlider.value, 10) * 60;
                 publishValue('Vehicle.Cabin.ChildPresenceDetection.DelayNotification', secondsValue);
-                delaySlider.style.pointerEvents = "none";
-                if(delayCard) delayCard.style.opacity = "0.7"; 
-            } else {
-                if(delaySlider) delaySlider.style.pointerEvents = "auto";
-                if(delayCard) delayCard.style.opacity = "1";
             }
         });
     }
 
-    // --- LOGIKA SETTINGS TOGGLŮ (Odesílání) ---
+    updateDelayUI();
+}
+
+// Menu navigation logic to switch between screens and manage visibility of elements based on active screen
+function initNavigation() {
+    const menuButtons = document.querySelectorAll(".left-menu button");
+    const screens = document.querySelectorAll(".sdv-screen");
+    const seatMap = document.querySelector(".seats");
+    const timeBar = document.querySelector(".time-with-status");
+    const delayBottomControls = document.getElementById("delay-bottom-controls");
+
+    menuButtons.forEach(button => {
+        button.addEventListener("click", function() {
+            menuButtons.forEach(btn => btn.classList.remove("active"));
+            this.classList.add("active");
+
+            const targetScreenId = this.getAttribute("data-screen");
+            
+            screens.forEach(screen => {
+                screen.style.display = (screen.id === targetScreenId) ? "block" : "none";
+            });
+
+            const isDelay = targetScreenId === "sdv-screen-delay";
+            const isSettings = targetScreenId === "sdv-screen-settings";
+
+            if (seatMap) {
+                seatMap.style.display = isDelay ? "none" : "flex";
+                seatMap.classList.toggle("dimmed", isSettings);
+            }
+
+            if (timeBar) {
+                timeBar.style.display = isDelay ? "none" : "flex";
+                timeBar.classList.toggle("dimmed", isSettings);
+            }
+
+            if (delayBottomControls) {
+                delayBottomControls.style.display = isDelay ? "flex" : "none";
+            }
+        });
+    });
+}
+
+document.addEventListener("DOMContentLoaded", () => {
+
+    const menuButtons = document.querySelectorAll(".left-menu button");
+
+    // Inicialization of delay controls and navigation
+    initDelayControls();
+    initNavigation();
+
+    // Menu control logic for active state
+    menuButtons.forEach(button => {
+    button.addEventListener("click", function() {
+
+        menuButtons.forEach(btn => btn.classList.remove("active"));
+        
+        this.classList.add("active");
+    });
+    });
+
+    // Toggle switches
     const disableChildToggle = document.getElementById('disable-child-toggle');
     const devModeToggle = document.getElementById('dev-mode-toggle');
 
     disableChildToggle?.addEventListener('change', (e) => {
-        // Odesíláme obrácenou hodnotu (pokud je zaškrtnuto Disable = SystemActive je false)
+        // Reversed logic: when toggle is checked, CPD system is NOT active
         publishValue('Vehicle.Cabin.ChildPresenceDetection.IsCPDSystemActive', !e.target.checked);
     });
 
@@ -114,24 +156,22 @@ document.addEventListener('DOMContentLoaded', () => {
         publishValue('Vehicle.Cabin.ChildPresenceDetection.IsDeveloperOptionActive', e.target.checked);
     });
 
-    // Prvotní vykreslení slideru
     updateDelayUI();
 });
 
-// --- 3. PŘÍJEM DAT ZE SERVERU (SSE) ---
 
+// Processing incoming data from KUKSA and updating the UI accordingly
 eventSource.onmessage = (event) => {
     const data = JSON.parse(event.data);
 
-    // HLAVNÍ STATUS (Nadpis Info obrazovky)
+    // Main system status update
     if (data["Vehicle.Cabin.ChildPresenceDetection.SystemStatus"] !== undefined){
         const mainStatusEl = document.querySelector('#sdv-screen-info .system-status-text');
         const statusText = data["Vehicle.Cabin.ChildPresenceDetection.SystemStatus"];
         if (mainStatusEl) mainStatusEl.innerText = statusText;
     }
 
-    // SEDADLA
-
+    // Child seat occupancy detection updates
     updateCPD('cpd-front-left',   !!data["Vehicle.Cabin.Seat.Row1.DriverSide.Occupant.Identifier.Issuer"]);
     updateCPD('cpd-front-right',  !!data["Vehicle.Cabin.Seat.Row1.PassengerSide.Occupant.Identifier.Issuer"]);
     updateCPD('cpd-rear-left',    !!data["Vehicle.Cabin.Seat.Row2.DriverSide.Occupant.Identifier.Issuer"]);
@@ -144,7 +184,7 @@ eventSource.onmessage = (event) => {
     //updateCPD('cpd-rear-middle',  (data["Vehicle.Cabin.Seat.Row2.Middle.Occupant.Identifier.Issuer"] === "true"));
     //updateCPD('cpd-rear-right',   (data["Vehicle.Cabin.Seat.Row2.PassengerSide.Occupant.Identifier.Issuer"] === "true"));
 
-    //DECH
+    // Breathing
     function updateBreathingUI(val, valId, statusId, iconId) {
         const rateEl = document.getElementById(valId);
         const statusEl = document.getElementById(statusId);
@@ -154,12 +194,11 @@ eventSource.onmessage = (event) => {
         if (rateEl) rateEl.innerText = val > 0 ? val : "--";
         
         if (statusEl && container) {
-            // Nejprve odstraníme všechny případné předchozí stavy, aby se netloukly
             container.classList.remove('state-stable', 'state-elevated', 'state-inactive');
 
             if (val > 0 && val < 40) {
                 statusEl.innerText = "Stable Breathing";
-                container.classList.add('state-stable'); // Přidáme stavovou třídu
+                container.classList.add('state-stable');
                 if (iconEl) iconEl.innerHTML = "&#xe90a;";
             } else if (val >= 40) {
                 statusEl.innerText = "Elevated Breathing";
@@ -173,15 +212,13 @@ eventSource.onmessage = (event) => {
         }
     }
 
-    // Hlavní zpracování dat
     if (data["Vehicle.Cabin.ChildPresenceDetection.UWBBreathing"] !== undefined) {
         const val = parseInt(data["Vehicle.Cabin.ChildPresenceDetection.UWBBreathing"], 10); 
 
-        // 2. Aktualizace pro SDV theme (nemá ikonu, posíláme null)
         updateBreathingUI(val, 'breathing-value-sdv', 'breathing-status-sdv', null);
     }
 
-    // TEPLOTA
+    // Temperature
         function updateTemperatureUI(val, valId, statusId, iconId) {
             const tempEl = document.getElementById(valId);
             const statusEl = document.getElementById(statusId);
@@ -191,7 +228,6 @@ eventSource.onmessage = (event) => {
             if (tempEl) tempEl.innerText = val !== undefined ? val : "--";
 
             if (statusEl && container) {
-                // Odstraníme předchozí stavy teploty
                 container.classList.remove('state-comfortable', 'state-hot', 'state-cold');
 
                 if (val >= 18 && val <= 26) {
@@ -210,14 +246,13 @@ eventSource.onmessage = (event) => {
             }
         }
 
-        // Hlavní zpracování dat (Teplota)
         if (data["Vehicle.Cabin.HVAC.AmbientAirTemperature"] !== undefined) {
             const val = parseInt(data["Vehicle.Cabin.HVAC.AmbientAirTemperature"], 10);
 
             updateTemperatureUI(val, 'internal-temp-value-sdv', 'internal-temp-status-sdv', null);
         }
 
-    // ODPOČET E-CALLU
+    // Counter and progress bar for driver notification delay
     if (data["Vehicle.Cabin.ChildPresenceDetection.NotificationTime"] !== undefined) {
         const timeEl = document.getElementById('remaining-time-text');
         const progressEl = document.getElementById('delay-progress');
@@ -283,7 +318,7 @@ eventSource.onmessage = (event) => {
         }
     }
 
-    // SYNCHRONIZACE TOGGLŮ
+    // Toggle switches synchronization with incoming data
     if (data["Vehicle.Cabin.ChildPresenceDetection.IsCPDSystemActive"] !== undefined) {
         const toggle = document.getElementById('disable-child-toggle');
         if (toggle) toggle.checked = !data["Vehicle.Cabin.ChildPresenceDetection.IsCPDSystemActive"];
@@ -293,7 +328,7 @@ eventSource.onmessage = (event) => {
         if (toggle) toggle.checked = (data["Vehicle.Cabin.ChildPresenceDetection.IsDeveloperOptionActive"] === true || data["Vehicle.Cabin.ChildPresenceDetection.IsDeveloperOptionActive"] === 1);
     }
 
-    // SYNCHRONIZACE SLIDERU
+    // Slider synchronization
     if (data["Vehicle.Cabin.ChildPresenceDetection.DelayNotification"] !== undefined) {
         const minutes = Math.floor(data["Vehicle.Cabin.ChildPresenceDetection.DelayNotification"] / 60);
         const slider = document.getElementById('sdv-delay-slider');
