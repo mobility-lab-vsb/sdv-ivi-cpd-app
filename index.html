@@ -44,6 +44,7 @@
             </section>
         </div>
 
+        <!-- Delay Setup Screen -->
         <div id="sdv-screen-delay" class="sdv-screen" style="display: none;">
             <section class="status-window" aria-label="Delay Setup">
                 <h1 class="system-status-text">Delay setup</h1>
@@ -55,20 +56,15 @@
                         <span class="sdv-slider-switch round"></span>
                     </label>
                 </div>
-
-                <div class="div sdv-setting-row">
-                    <span class="status-text">Notification delay</span>
-                    <span class="status-text-value-hal4sdv">3 minutes</span>
-                </div>
-
-                <div class="div sdv-slider-container">
-                    <button class="sdv-ctrl-btn" id="sdv-delay-minus">−</button>
-                    <input type="range" min="1" max="10" value="3" step="1" class="sdv-range" id="sdv-delay-slider">
-                    <button class="sdv-ctrl-btn" id="sdv-delay-plus">+</button>
-                </div>
             </section>
+
+            <div id="delay-text-wrapper" class="delay-huge-text-container">
+                <span class="status-text">Notification delay</span>
+                <div id="delay-time-display" class="huge-time-text">3 minutes</div>
+            </div>
         </div>
 
+        <!-- Settings Screen -->
         <div id="sdv-screen-settings" class="sdv-screen" style="display: none;">
             <section class="status-window" aria-label="Settings">
                 <h1 class="system-status-text">Settings</h1>
@@ -88,17 +84,8 @@
                         <span class="sdv-slider-switch round"></span>
                     </label>
                 </div>
-
-                <div class="div sdv-setting-row">
-                    <span class="status-text">HAL4SDV Theme</span>
-                    <label class="sdv-switch">
-                        <input type="checkbox" id="sdv-theme-toggle" checked>
-                        <span class="sdv-slider-switch round"></span>
-                    </label>
-                </div>
             </section>
         </div>
-
 
         <footer class="bottom-section" aria-label="Navigation and Timer">
             <nav class="left-menu" aria-label="Main Menu">
@@ -131,6 +118,24 @@
                 </div>
                 <div class="progress-slider" role="progressbar" aria-valuemin="0" aria-valuemax="600">
                     <div id="delay-progress" class="remaining-progress" style="width: 0%;"></div>
+                </div>
+            </div>
+
+            <div id="delay-bottom-controls" style="display: none; width: 100%;">
+                <div class="slider-row">
+                    <button class="sdv-ctrl-btn large-btn" id="sdv-delay-minus">−</button>
+                    
+                    <div class="slider-wrapper">
+                        <input type="range" min="0" max="10" value="3" step="1" class="sdv-range huge-slider" id="sdv-delay-slider">
+                        
+                        <div class="slider-scale">
+                            <span>0</span>
+                            <span>5</span>
+                            <span>10</span>
+                        </div>
+                    </div>
+                    
+                    <button class="sdv-ctrl-btn large-btn" id="sdv-delay-plus">+</button>
                 </div>
             </div>
             </footer>
