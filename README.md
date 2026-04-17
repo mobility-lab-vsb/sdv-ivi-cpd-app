@@ -126,5 +126,3 @@ The Node.js backend provides the following internal REST and SSE endpoints to se
     "value": 300
   }
   ```
-
----
