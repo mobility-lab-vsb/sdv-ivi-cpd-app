@@ -125,4 +125,3 @@ The Node.js backend provides the following internal REST and SSE endpoints to se
     "path": "Vehicle.Cabin.ChildPresenceDetection.DelayNotification",
     "value": 300
   }
-  ```

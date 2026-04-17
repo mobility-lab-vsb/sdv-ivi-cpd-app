@@ -10,7 +10,7 @@ const CLIENT_ID = 'VSS_Panel';
 const USERNAME = 'admin';
 const PASSWORD = 'admin';
 
-/*const mqtt_client = mqtt.connect(BROKER_URL, {
+const mqtt_client = mqtt.connect(BROKER_URL, {
     clientId: CLIENT_ID,
     username: USERNAME,
     password: PASSWORD,
@@ -32,7 +32,7 @@ mqtt_client.on('message', (topic, message) => {
     const text = `${msgObj.path}: ${msgObj.value}`;
 
     dockerSubscribe.write(`actuate ${msgObj.path} ${msgObj.value}\n`);
-});*/
+});
 
 const app = express();
 const BROKER = "kuksa";         // Docker network name
@@ -165,7 +165,7 @@ function parseAndValidate(text) {
                 currentState[path] = val;
                 changed = true;
                 console.log(`${path} (BOOL): ${val}`);
-                //mqtt_client.publish(VSS_TOPIC, JSON.stringify({ path, value: val, timestamp: Date.now() / 1000 }));
+                mqtt_client.publish(VSS_TOPIC, JSON.stringify({ path, value: val, timestamp: Date.now() / 1000 }));
             }
         }
     };
@@ -179,7 +179,7 @@ function parseAndValidate(text) {
                 currentState[path] = val;
                 changed = true;
                 console.log(`${path} (INT): ${val}`);
-                //mqtt_client.publish(VSS_TOPIC, JSON.stringify({ path, value: val }));
+                mqtt_client.publish(VSS_TOPIC, JSON.stringify({ path, value: val }));
             }
         }
     };
@@ -196,7 +196,7 @@ function parseAndValidate(text) {
                 currentState[path] = val;
                 changed = true;
                 console.log(`${path} (STR): ${val}`);
-                //mqtt_client.publish(VSS_TOPIC, JSON.stringify({ path, value: val }));
+                mqtt_client.publish(VSS_TOPIC, JSON.stringify({ path, value: val }));
             }
         }
     };
