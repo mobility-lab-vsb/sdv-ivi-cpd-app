@@ -10,7 +10,7 @@ The solution is built upon the **VSS (Vehicle Signal Specification)** standard a
 Here is a preview of the panel in action:
 
 ![Info Overview - Idle State](img/panel_2.png)
-![Info Overview - Active Notification (Cool Temperature & Elevated Breathing)](img/panel_1_.png)
+![Info Overview - Active Notification (Cool Temperature & Elevated Breathing)](img/panel_1.png)
 ![Notification Delay Menu](img/panel_3.png)
 ![Settings Menu](img/panel_4.png)
 
