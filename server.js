@@ -4,13 +4,13 @@ import pty from 'node-pty-prebuilt-multiarch';
 import mqtt from 'mqtt'
 
 const BROKER_PORT = 8883
-const VSS_TOPIC = "joyja/car/a8b3f7d2/vss/data"
+const VSS_TOPIC = "car/vss/data"
 const BROKER_URL = `mqtts://29286cbd1b03464594ed587a7f335e9b.s1.eu.hivemq.cloud:${BROKER_PORT}`;
-const CLIENT_ID = 'VSS_Continuous_Panel';
-const USERNAME = 'vehicleEX01';
-const PASSWORD = 'Mobility.Aes1';
+const CLIENT_ID = 'VSS_Panel';
+const USERNAME = 'admin';
+const PASSWORD = 'admin';
 
-const mqtt_client = mqtt.connect(BROKER_URL, {
+/*const mqtt_client = mqtt.connect(BROKER_URL, {
     clientId: CLIENT_ID,
     username: USERNAME,
     password: PASSWORD,
@@ -30,17 +30,15 @@ mqtt_client.on('message', (topic, message) => {
     console.log(topic, message.toString());
     const msgObj = JSON.parse(message.toString());
     const text = `${msgObj.path}: ${msgObj.value}`;
-    
-    ////parseAndValidate(text);
 
     dockerSubscribe.write(`actuate ${msgObj.path} ${msgObj.value}\n`);
-});
+});*/
 
 const app = express();
-const BROKER = "kuksa"; //vdis-demo_kuksa
-const SERVER = "Server"; //192.168.1.231 192.168.1.160
-const HOST = "0.0.0.0"; //SERVER
-const PORT = 3000;
+const BROKER = "kuksa";         // Docker network name
+const SERVER = "Server";        // IP address or hostname of the Databroker server
+const HOST = "0.0.0.0";         // Web server interface binding
+const PORT = 3000;              // Web server listening port
 
 app.use(bodyParser.json());
 app.use(express.static('.', { index: 'index.html' }));
@@ -167,7 +165,7 @@ function parseAndValidate(text) {
                 currentState[path] = val;
                 changed = true;
                 console.log(`${path} (BOOL): ${val}`);
-                mqtt_client.publish(VSS_TOPIC, JSON.stringify({ path, value: val, timestamp: Date.now() / 1000 }));
+                //mqtt_client.publish(VSS_TOPIC, JSON.stringify({ path, value: val, timestamp: Date.now() / 1000 }));
             }
         }
     };
@@ -181,7 +179,7 @@ function parseAndValidate(text) {
                 currentState[path] = val;
                 changed = true;
                 console.log(`${path} (INT): ${val}`);
-                mqtt_client.publish(VSS_TOPIC, JSON.stringify({ path, value: val }));
+                //mqtt_client.publish(VSS_TOPIC, JSON.stringify({ path, value: val }));
             }
         }
     };
@@ -198,7 +196,7 @@ function parseAndValidate(text) {
                 currentState[path] = val;
                 changed = true;
                 console.log(`${path} (STR): ${val}`);
-                mqtt_client.publish(VSS_TOPIC, JSON.stringify({ path, value: val }));
+                //mqtt_client.publish(VSS_TOPIC, JSON.stringify({ path, value: val }));
             }
         }
     };
