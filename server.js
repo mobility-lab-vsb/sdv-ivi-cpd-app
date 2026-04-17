@@ -94,7 +94,7 @@ app.post('/publish', (req, res) => {
   const { path, value } = req.body;
 
   if (!path || value === undefined) {
-    return res.status(400).send("Chybí 'path' nebo 'value'!");
+    return res.status(400).send("'path' or 'value' is missing!");
   }
 
   const valueStr = String(value);
@@ -226,5 +226,5 @@ function parseAndValidate(text) {
 // SERVER START
 // ============================================================================
 app.listen(PORT, HOST, () => {
-  console.log(`Server běží na http://${HOST}:${PORT}`);
+  console.log(`Server is running at http://${HOST}:${PORT}`);
 });
