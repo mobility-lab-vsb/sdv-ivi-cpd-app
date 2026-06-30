@@ -281,10 +281,10 @@ eventSource.onmessage = (event) => {
                 statusTextEl.innerText = "Notifying driver";*/
                 switch (data["Vehicle.Cabin.ChildPresenceDetection.SystemStatus"])
                 {
-                    case "Inactive":
+                    case "OFF":
                         statusTextEl.innerText = "Time until scan";
                         break;
-                    case "Scan":
+                    case "Scanning":
                         if (data["Vehicle.Cabin.ChildPresenceDetection.FusionErrorTime"] > 0)
                         {
                             statusTextEl.innerText = "Time until error";
@@ -294,10 +294,13 @@ eventSource.onmessage = (event) => {
                             statusTextEl.innerText = "Time until standby";
                         }
                         break;
-                    case "Driver Notification":
+                    case "Child Confirmed":
+                        statusTextEl.innerText = "Time until driver notification";
+                        break;
+                    case "Notify Driver":
                         statusTextEl.innerText = "Time until external alert";
                         break;
-                    case "External Alert":
+                    case "External alert":
                         statusTextEl.innerText = "Time until intervention";
                         break;
                     case "Intervention":

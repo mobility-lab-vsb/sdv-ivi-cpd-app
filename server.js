@@ -4,13 +4,13 @@ import pty from 'node-pty-prebuilt-multiarch';
 import mqtt from 'mqtt'
 
 const BROKER_PORT = 8883
-const VSS_TOPIC = "car/vss/data"
+const VSS_TOPIC = "joyja/car/a8b3f7d2/vss/data"
 const BROKER_URL = `mqtts://29286cbd1b03464594ed587a7f335e9b.s1.eu.hivemq.cloud:${BROKER_PORT}`;
-const CLIENT_ID = 'VSS_Panel';
-const USERNAME = 'admin';
-const PASSWORD = 'admin';
+const CLIENT_ID = 'VSS_Continuous_Panel';
+const USERNAME = 'vehicleEX01';
+const PASSWORD = 'Mobility.Aes1';
 
-/*const mqtt_client = mqtt.connect(BROKER_URL, {
+const mqtt_client = mqtt.connect(BROKER_URL, {
     clientId: CLIENT_ID,
     username: USERNAME,
     password: PASSWORD,
@@ -31,8 +31,8 @@ mqtt_client.on('message', (topic, message) => {
     const msgObj = JSON.parse(message.toString());
     const text = `${msgObj.path}: ${msgObj.value}`;
 
-    dockerSubscribe.write(`actuate ${msgObj.path} ${msgObj.value}\n`);
-});*/
+    dockerSubscribe.write(`publish ${msgObj.path} ${msgObj.value}\n`);
+});
 
 const app = express();
 const BROKER = "kuksa";         // Docker network name
@@ -165,7 +165,7 @@ function parseAndValidate(text) {
                 currentState[path] = val;
                 changed = true;
                 console.log(`${path} (BOOL): ${val}`);
-                //mqtt_client.publish(VSS_TOPIC, JSON.stringify({ path, value: val, timestamp: Date.now() / 1000 }));
+                mqtt_client.publish(VSS_TOPIC, JSON.stringify({ path, value: val, timestamp: Date.now() / 1000 }));
             }
         }
     };
@@ -179,7 +179,7 @@ function parseAndValidate(text) {
                 currentState[path] = val;
                 changed = true;
                 console.log(`${path} (INT): ${val}`);
-                //mqtt_client.publish(VSS_TOPIC, JSON.stringify({ path, value: val }));
+                mqtt_client.publish(VSS_TOPIC, JSON.stringify({ path, value: val }));
             }
         }
     };
@@ -196,7 +196,7 @@ function parseAndValidate(text) {
                 currentState[path] = val;
                 changed = true;
                 console.log(`${path} (STR): ${val}`);
-                //mqtt_client.publish(VSS_TOPIC, JSON.stringify({ path, value: val }));
+                mqtt_client.publish(VSS_TOPIC, JSON.stringify({ path, value: val }));
             }
         }
     };
