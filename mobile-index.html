@@ -1,0 +1,196 @@
+<!DOCTYPE html>
+<html>
+<head>
+  <meta name="viewport" content="width=device-width, initial-scale=1" />
+  <meta charset="utf-8" />
+  <link rel="stylesheet" href="css/globals.css">
+  <link rel="stylesheet" href="css/mobile-style.css">
+
+  <link rel="stylesheet" href="fonts/icons/font/style.css" />
+  <link rel="stylesheet" href="fonts/stylesheet.css" />
+</head>
+<body>
+  <div class="app">
+
+    <section class="tab-panel active" id="tab-info">
+      <img class="logo" src="img/HAL4SDV_logo_black_transp.avif" />
+      
+      <div class="system-status">
+        <div class="system-status-text">Child Confirmed</div>
+      </div>
+      
+      <div class="car-frame">
+        <div class="seats">
+          <div class="front-seats">
+            <div class="seat">
+              <i class="icon baby-icon" aria-hidden="true">&#xe900;</i>
+            </div>
+            <div class="seat">
+              <i class="icon baby-icon" aria-hidden="true">&#xe900;</i>
+            </div>
+          </div>
+          
+          <div class="rear-seats">
+            <div class="seat">
+              <div class="div">
+                <i class="icon baby-icon" aria-hidden="true">&#xe900;</i>
+              </div>
+            </div>
+            <div class="seat">
+              <div class="div">
+                <i class="icon baby-icon" aria-hidden="true">&#xe900;</i>
+              </div>
+            </div>
+            <div class="seat">
+              <div class="div">
+                <i class="icon baby-icon" aria-hidden="true">&#xe900;</i>
+              </div>
+            </div>
+          </div>
+        </div>
+      </div>
+      
+      <div class="info-frame">
+        <i class="icon frame-icon" aria-hidden="true">&#xf003;</i>
+        <div class="temperature">
+          <div class="info-frame-text">Internal temperature:</div>
+          <div class="value-status-frame">
+            <div class="info-frame-value">21 °C</div>
+            <div class="status">
+              <div class="temperature-status">
+                <div class="status-text">Good / Comfortable</div>
+              </div>
+            </div>
+          </div>
+        </div>
+      </div>
+      
+      <div class="info-frame">
+        <i class="icon frame-icon" aria-hidden="true">&#xf006;</i>
+        <div class="temperature">
+          <div class="info-frame-text">Respiration per minute:</div>
+          <div class="value-status-frame">
+            <div class="info-frame-value">22 RPM</div>
+            <div class="status">
+              <div class="temperature-status">
+                <div class="status-text">Stable breathing</div>
+              </div>
+            </div>
+          </div>
+        </div>
+      </div>
+      
+      <div class="time-frame">
+        <div class="time-text">4:20</div>
+        <p class="description-text">Time until first e-call initiation</p>
+        <div class="progress-slider">
+          <div class="remaining-progress"></div>
+        </div>
+      </div>
+    </section>
+
+    <section class="tab-panel" id="tab-delay">
+      <img class="logo" src="img/HAL4SDV_logo_black_transp.avif" />
+
+      <div class="mobile-page-title">Delay setup</div>
+
+      <div class="mobile-card delay-enable-card">
+        <div class="setting-row">
+          <div class="setting-label">Enable delay</div>
+
+          <label class="switch">
+            <input type="checkbox" id="delay-toggle" checked>
+            <span class="switch-slider"></span>
+          </label>
+        </div>
+      </div>
+
+      <div class="mobile-card delay-value-card">
+        <div class="small-muted-text">Notification delay</div>
+        <div class="delay-minutes">
+          <span id="delay-value">4</span> minutes
+        </div>
+      </div>
+
+      <div class="mobile-card delay-slider-card">
+        <div class="delay-controls">
+          <button class="delay-control" id="delay-minus" type="button">−</button>
+
+          <input
+            class="delay-range"
+            id="delay-range"
+            type="range"
+            min="0"
+            max="10"
+            value="4"
+          >
+
+          <button class="delay-control" id="delay-plus" type="button">+</button>
+        </div>
+
+        <div class="range-labels">
+          <span>0</span>
+          <span>5</span>
+          <span>10</span>
+        </div>
+      </div>
+    </section>
+
+    <section class="tab-panel" id="tab-settings">
+      <img class="logo" src="img/HAL4SDV_logo_black_transp.avif" />
+
+      <div class="mobile-page-title">Settings</div>
+
+      <div class="mobile-card settings-card">
+        <div class="setting-row">
+          <div class="setting-label">Disable child presence</div>
+
+          <label class="switch">
+            <input type="checkbox" id="disable-child-presence">
+            <span class="switch-slider"></span>
+          </label>
+        </div>
+
+        <div class="setting-row">
+          <div class="setting-label">Enable developer mode</div>
+
+          <label class="switch">
+            <input type="checkbox" id="developer-mode" checked>
+            <span class="switch-slider"></span>
+          </label>
+        </div>
+      </div>
+    </section>
+
+    <div class="bottom-section">
+      <div class="menu-button-info menu-button active" data-tab="info">
+        <img class="line" />
+        <div class="info-text">
+          <i class="icon menu-icon" aria-hidden="true">&#xf004;</i>
+          <div class="menu-card-text">Info</div>
+        </div>
+      </div>
+      <div class="menu-button-delay menu-button" data-tab="delay">
+        <img class="line-2" />
+        <div class="info-text">
+          <div class="group">
+            <i class="icon menu-icon" aria-hidden="true">&#xf001;</i>
+          </div>
+          <div class="menu-card-text">Delay</div>
+        </div>
+      </div>
+      <div class="menu-button-settings menu-button" data-tab="settings">
+        <img class="line-3" />
+        <div class="info-text">
+            <i class="icon menu-icon" aria-hidden="true">&#xf005;</i>
+          <div class="menu-card-text">Settings</div>
+        </div>
+      </div>
+    </div>
+    
+  </div>
+
+  <script src="/js/mobile-app.js"></script>
+
+</body>
+</html>
