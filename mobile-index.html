@@ -4,6 +4,7 @@
   <meta name="viewport" content="width=device-width, initial-scale=1" />
   <meta charset="utf-8" />
   <link rel="stylesheet" href="css/globals.css">
+  <link rel="stylesheet" href="css/cssstyleguide.css">
   <link rel="stylesheet" href="css/mobile-style.css">
 
   <link rel="stylesheet" href="fonts/icons/font/style.css" />
@@ -11,10 +12,9 @@
 </head>
 <body>
   <div class="app">
+    <img class="logo" src="img/HAL4SDV_logo_black_transp.avif" />
 
     <section class="tab-panel active" id="tab-info">
-      <img class="logo" src="img/HAL4SDV_logo_black_transp.avif" />
-      
       <div class="system-status">
         <div class="system-status-text">Child Confirmed</div>
       </div>
@@ -32,19 +32,13 @@
           
           <div class="rear-seats">
             <div class="seat">
-              <div class="div">
-                <i class="icon baby-icon" aria-hidden="true">&#xe900;</i>
-              </div>
+              <i class="icon baby-icon" aria-hidden="true">&#xe900;</i>
             </div>
             <div class="seat">
-              <div class="div">
-                <i class="icon baby-icon" aria-hidden="true">&#xe900;</i>
-              </div>
+              <i class="icon baby-icon" aria-hidden="true">&#xe900;</i>
             </div>
             <div class="seat">
-              <div class="div">
-                <i class="icon baby-icon" aria-hidden="true">&#xe900;</i>
-              </div>
+              <i class="icon baby-icon" aria-hidden="true">&#xe900;</i>
             </div>
           </div>
         </div>
@@ -55,10 +49,10 @@
         <div class="temperature">
           <div class="info-frame-text">Internal temperature:</div>
           <div class="value-status-frame">
-            <div class="info-frame-value">21 °C</div>
+            <div class="info-frame-value"><span id="internal-temp-value-sdv">21</span> °C</div>
             <div class="status">
               <div class="temperature-status">
-                <div class="status-text">Good / Comfortable</div>
+                <span class="status-text" id="internal-temp-status-sdv" >Good / Comfortable</span>
               </div>
             </div>
           </div>
@@ -70,10 +64,10 @@
         <div class="temperature">
           <div class="info-frame-text">Respiration per minute:</div>
           <div class="value-status-frame">
-            <div class="info-frame-value">22 RPM</div>
+            <div class="info-frame-value"> <span id="breathing-value-sdv">22</span> RPM</div>
             <div class="status">
               <div class="temperature-status">
-                <div class="status-text">Stable breathing</div>
+                <span class="status-text" id="breathing-status-sdv">Stable breathing</span>
               </div>
             </div>
           </div>
@@ -90,8 +84,6 @@
     </section>
 
     <section class="tab-panel" id="tab-delay">
-      <img class="logo" src="img/HAL4SDV_logo_black_transp.avif" />
-
       <div class="mobile-page-title">Delay setup</div>
 
       <div class="mobile-card delay-enable-card">
@@ -99,7 +91,7 @@
           <div class="setting-label">Enable delay</div>
 
           <label class="switch">
-            <input type="checkbox" id="delay-toggle" checked>
+            <input type="checkbox" id="delay-toggle">
             <span class="switch-slider"></span>
           </label>
         </div>
@@ -137,8 +129,6 @@
     </section>
 
     <section class="tab-panel" id="tab-settings">
-      <img class="logo" src="img/HAL4SDV_logo_black_transp.avif" />
-
       <div class="mobile-page-title">Settings</div>
 
       <div class="mobile-card settings-card">
@@ -147,6 +137,15 @@
 
           <label class="switch">
             <input type="checkbox" id="disable-child-presence">
+            <span class="switch-slider"></span>
+          </label>
+        </div>
+
+        <div class="setting-row">
+          <div class="setting-label">Enable notifications</div>
+
+          <label class="switch">
+            <input type="checkbox" id="enable-notifications">
             <span class="switch-slider"></span>
           </label>
         </div>
@@ -164,23 +163,18 @@
 
     <div class="bottom-section">
       <div class="menu-button-info menu-button active" data-tab="info">
-        <img class="line" />
         <div class="info-text">
           <i class="icon menu-icon" aria-hidden="true">&#xf004;</i>
           <div class="menu-card-text">Info</div>
         </div>
       </div>
       <div class="menu-button-delay menu-button" data-tab="delay">
-        <img class="line-2" />
         <div class="info-text">
-          <div class="group">
             <i class="icon menu-icon" aria-hidden="true">&#xf001;</i>
-          </div>
-          <div class="menu-card-text">Delay</div>
+            <div class="menu-card-text">Delay</div>
         </div>
       </div>
       <div class="menu-button-settings menu-button" data-tab="settings">
-        <img class="line-3" />
         <div class="info-text">
             <i class="icon menu-icon" aria-hidden="true">&#xf005;</i>
           <div class="menu-card-text">Settings</div>
@@ -190,7 +184,8 @@
     
   </div>
 
-  <script src="/js/mobile-app.js"></script>
+  <script src="js/mobile-app.js"></script>
+  <script src="js/script.js"></script>
 
 </body>
 </html>
